@@ -54,6 +54,7 @@ RUN ./configure --enable-fastcgi \
     --with-mcrypt \
     --with-mhash \
     --with-mysql \
+    --with-mysqli \
     --with-mysql-sock \
     --with-openssl \
     --with-pcre-regex \
