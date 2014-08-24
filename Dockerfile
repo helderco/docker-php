@@ -1,79 +1,88 @@
-# FROM ubuntu:lucid
-FROM debian:squeeze
+FROM debian:jessie
 MAINTAINER Helder Correia <me@heldercorreia.com>
 
-# Set correct environment variables.
-ENV DEBIAN_FRONTEND noninteractive
-ENV HOME /root
+# Get PHP 5.5
+ADD http://php.net/get/php-5.5.16.tar.bz2/from/this/mirror /tmp/php-5.5.16.tar.bz2
 
-# This OS comes with a new autoconf tool version, which is
-# not compatible with PHP, that’s why for successful compilation
-# you need to temporarily install autoconf2.13 package.
-RUN apt-get update && apt-get install -y \
-    autoconf2.13 \
-    libbz2-dev \
-    libcurl4-openssl-dev \
-    libltdl-dev \
-    libmcrypt-dev \
-    libevent-dev \
-    libmhash-dev \
-    libmysqlclient-dev \
-    libpcre3-dev \
-    libpng12-dev \
-    libxml2-dev \
-    make \
-    patch
+# Install dependencies
+RUN apt-get update && \
+    apt-get install -y \
+        build-essential \
+        bzip2 \
+        libbz2-dev \
+        libc-client-dev \
+        libcurl4-openssl-dev \
+        libfreetype6-dev \
+        libicu-dev \
+        libjpeg-dev \
+        libltdl-dev \
+        libmcrypt-dev \
+        libmhash-dev \
+        libmysqlclient-dev \
+        libpcre3-dev \
+        libpng-dev \
+        libpng12-dev \
+        libreadline-dev \
+        libssl-dev \
+        libxml2-dev \
+        libxpm-dev \
+        make \
+        mcrypt \
+    && apt-get clean
 
-# Download PHP 5.2.16, Suhosin patch, PHP-FPM patch
-#  - http://museum.php.net/php5/php-5.2.16.tar.bz2
-#  - http://download.suhosin.org/suhosin-patch-5.2.16-0.9.7.patch.gz
-#  - http://php-fpm.org/downloads/php-5.2.16-fpm-0.5.14.diff.gz
-ADD tmp/ /tmp
-RUN gunzip /tmp/*.gz && tar xf /tmp/php-5.2.16.tar -C /tmp
-WORKDIR /tmp/php-5.2.16
+# Install PHP
+RUN tar xjf /tmp/php-5.5.16.tar.bz2 -C /tmp && \
+    cd /tmp/php-5.5.16 && \
+    ./configure \
+        --enable-bcmath \
+        --enable-calendar \
+        --enable-exif \
+        --enable-fpm \
+        --enable-ftp \
+        --enable-gd-native-ttf \
+        --enable-libxml \
+        --enable-mbstring \
+        --enable-opcache \
+        --enable-pcntl \
+        --enable-soap \
+        --enable-sockets \
+        --enable-wddx \
+        --enable-zip \
+        --with-bz2 \
+        --with-config-file-path=/etc/php5 \
+        --with-config-file-scan-dir=/etc/php5/conf.d \
+        --with-curl \
+        --with-fpm-group=www-data \
+        --with-fpm-user=www-data \
+        --with-gd \
+        --with-gettext \
+        --with-jpeg-dir \
+        --with-libdir=/lib/x86_64-linux-gnu \
+        --with-mcrypt \
+        --with-mhash \
+        --with-mysql \
+        --with-mysql-sock \
+        --with-mysqli \
+        --with-openssl \
+        --with-pcre-regex \
+        --with-pdo-mysql \
+        --with-pdo-sqlite \
+        --with-png-dir \
+        --with-readline \
+        --with-zlib \
+    && make && make install \
+    && mkdir -p /etc/php5/conf.d \
+    && cp php.ini-production /etc/php5/php.ini  \
+    && cp /usr/local/etc/php-fpm.conf.default /etc/php5/php-fpm.conf \
+    && rm -rf /tmp/* /var/tmp/*
 
-# Apply patches
-RUN patch -p1 -i ../php-5.2.16-fpm-0.5.14.diff && \
-    patch -p1 -i ../suhosin-patch-5.2.16-0.9.7.patch
-
-# Configure
-RUN ./buildconf --force
-RUN ./configure --enable-fastcgi \
-    --enable-fpm \
-    --enable-mbstring \
-    --enable-sockets \
-    --with-config-file-path=/etc/php5 \
-    --with-curl \
-    --with-fpm-conf=/etc/php5/php-fpm.conf \
-    --with-fpm-log=/var/log/php5/php-fpm.log \
-    --with-fpm-pid=/var/run/php-fpm/php-fpm.pid \
-    --with-gd \
-    --with-gettext \
-    --with-libdir \
-    --with-libdir=lib64 \
-    --with-mcrypt \
-    --with-mhash \
-    --with-mysql \
-    --with-mysqli \
-    --with-mysql-sock \
-    --with-openssl \
-    --with-pcre-regex \
-    --with-png-dir \
-    --with-zlib \
-    --without-sqlite
-
-# Install
-RUN make && make install
-
-# Uninstall autoconf2.13 after compilation.
-RUN apt-get remove -y autoconf2.13
-
-# Get out of /tmp
-WORKDIR /
-
-# Clean up APT when done.
-RUN apt-get clean && rm -rf /tmp/* /var/tmp/*
+# Tweak config a bit
+RUN sed -i -e "s/^listen = 127.0.0.1:9000/listen = 0.0.0.0:9000/" /etc/php5/php-fpm.conf && \
+    sed -i -e "s/^;daemonize = yes/daemonize = no/" /etc/php5/php-fpm.conf && \
+    sed -i -e "s/^pm = dynamic/pm = ondemand/" /etc/php5/php-fpm.conf && \
+    sed -i -e "s|^;error_log = php_errors.log|error_log = /var/log/php_errors.log|" /etc/php5/php.ini
 
 # Run php-fpm
 EXPOSE 9000
-CMD ["php-cgi", "--fpm"]
+
+CMD ["php-fpm", "--fpm-config", "/etc/php5/php-fpm.conf"]
