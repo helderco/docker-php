@@ -4,21 +4,24 @@ MAINTAINER Helder Correia <me@heldercorreia.com>
 # This OS comes with a new autoconf tool version, which is
 # not compatible with PHP, that’s why for successful compilation
 # you need to temporarily install autoconf2.13 package.
-RUN apt-get update && apt-get install -y \
-    autoconf2.13 \
-    libbz2-dev \
-    libcurl4-openssl-dev \
-    libltdl-dev \
-    libmcrypt-dev \
-    libevent-dev \
-    libmhash-dev \
-    libmysqlclient-dev \
-    libpcre3-dev \
-    libpng12-dev \
-    libxml2-dev \
-    make \
-    patch \
-    && apt-get clean
+RUN apt-get update \
+    && apt-get install -y \
+        autoconf2.13 \
+        libbz2-dev \
+        libcurl4-openssl-dev \
+        libltdl-dev \
+        libmcrypt-dev \
+        libevent-dev \
+        libmhash-dev \
+        libmysqlclient-dev \
+        libpcre3-dev \
+        libpng12-dev \
+        libxml2-dev \
+        make \
+        patch \
+        xmlstarlet \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Download PHP 5.2.16, Suhosin patch, PHP-FPM patch
 #  - http://museum.php.net/php5/php-5.2.16.tar.bz2
@@ -39,11 +42,11 @@ RUN ./configure \
     --enable-fpm \
     --enable-mbstring \
     --enable-sockets \
-    --with-config-file-path=/etc/php5 \
+    --with-config-file-path=/etc/php \
     --with-curl \
-    --with-fpm-conf=/etc/php5/php-fpm.conf \
-    --with-fpm-log=/var/log/php5/php-fpm.log \
-    --with-fpm-pid=/var/run/php-fpm/php-fpm.pid \
+    --with-fpm-conf=/etc/php/php-fpm.conf \
+    --with-fpm-log=/var/log/php/php-fpm.log \
+    --with-fpm-pid=/var/run/php/php-fpm.pid \
     --with-gd \
     --with-gettext \
     --with-libdir \
@@ -65,11 +68,15 @@ RUN make && make install
 # Uninstall autoconf2.13 after compilation.
 RUN apt-get remove -y autoconf2.13
 
+# Clean up
+RUN rm -rf /tmp/* /var/tmp/*
+
 # Get out of /tmp
 WORKDIR /
 
-# Clean up
-RUN rm -rf /tmp/* /var/tmp/*
+# Add entrypoint
+COPY init.sh /init
+ENTRYPOINT ["/init"]
 
 # Run php-fpm
 EXPOSE 9000
