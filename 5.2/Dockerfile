@@ -45,7 +45,7 @@ RUN ./configure \
     --with-config-file-path=/etc/php \
     --with-curl \
     --with-fpm-conf=/etc/php/php-fpm.conf \
-    --with-fpm-log=/var/log/php/php-fpm.log \
+    --with-fpm-log=/var/log/php/php_errors.log \
     --with-fpm-pid=/var/run/php/php-fpm.pid \
     --with-gd \
     --with-gettext \

@@ -19,7 +19,7 @@ cat <<END > /etc/php/php-fpm.conf
         <value name="pid_file">/var/run/php/php-fpm.pid</value>
 
         Error log file
-        <value name="error_log">/var/log/php/php-fpm.log</value>
+        <value name="error_log">/var/log/php/php_errors.log</value>
 
         Log level
         <value name="log_level">notice</value>
@@ -67,7 +67,6 @@ cat <<END > /etc/php/php-fpm.conf
             <value name="php_defines">
         <!--        <value name="sendmail_path">/usr/sbin/sendmail -t -i</value>        -->
                <value name="log_errors">On</value>
-               <value name="error_log">/var/log/php/php-error.log</value>
                <value name="error_reporting">E_ALL | ~E_STRICT</value>
                <value name="date.timezone">${TIMEZONE}</value>
             </value>
