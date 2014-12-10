@@ -82,7 +82,7 @@ cat <<END > /etc/php/php-fpm.conf
 
                 Sets style of controling worker process count.
                 Valid values are 'static' and 'apache-like'
-                <value name="apache-like">apache-like</value>
+                <value name="style">apache-like</value>
 
                 Sets the limit on the number of simultaneous requests that will be served.
                 Equivalent to Apache MaxClients directive.
