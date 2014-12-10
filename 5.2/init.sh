@@ -65,10 +65,10 @@ cat <<END > /etc/php/php-fpm.conf
 
             Additional php.ini defines, specific to this pool of workers.
             <value name="php_defines">
-        <!--        <value name="sendmail_path">/usr/sbin/sendmail -t -i</value>        -->
-               <value name="log_errors">On</value>
-               <value name="error_reporting">E_ALL | ~E_STRICT</value>
-               <value name="date.timezone">${TIMEZONE}</value>
+                <!-- <value name="sendmail_path">/usr/sbin/sendmail -t -i</value> -->
+                <value name="log_errors">On</value>
+                <value name="error_reporting">E_ALL | ~E_STRICT</value>
+                <value name="date.timezone">${TIMEZONE}</value>
             </value>
 
             Unix user of processes
@@ -146,7 +146,7 @@ cat <<END > /etc/php/php-fpm.conf
             Comma separated list of ipv4 addresses of FastCGI clients that allowed to connect.
             Equivalent to FCGI_WEB_SERVER_ADDRS environment in original php.fcgi (5.2.2+)
             Makes sense only with AF_INET listening socket.
-            <value name="allowed_clients">127.0.0.1</value>
+            <!-- <value name="allowed_clients">127.0.0.1</value> -->
 
             Pass environment variables like LD_LIBRARY_PATH
             All $VARIABLEs are taken from current environment
