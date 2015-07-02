@@ -7,7 +7,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # Install needed extensions
-RUN docker-php-ext-install mysqli pdo pdo_mysql zip
+RUN docker-php-ext-install mysqli pdo_mysql zip
 
 # Tweak php-fpm.conf a bit
 RUN sed -i -e "s/^pm = dynamic/pm = ondemand/" /usr/local/etc/php-fpm.conf
