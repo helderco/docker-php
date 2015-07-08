@@ -83,4 +83,4 @@ CMD ["php-fpm"]
 
 COPY bin/* /usr/local/bin/
 COPY etc/*.ini /usr/local/etc/php/
-RUN cd /usr/local/etc/php && cp production.ini conf.d/environment.ini
+RUN cd /usr/local/etc/php && mkdir conf.d && cp production.ini conf.d/environment.ini
