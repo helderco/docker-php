@@ -2,9 +2,7 @@ FROM php:5.6-fpm
 
 COPY bin/* /usr/local/bin/
 COPY etc/production.ini /usr/local/etc/php/conf.d/environment.ini
-
 RUN sed -i -e "s/^pm = dynamic/pm = ondemand/" /usr/local/etc/php-fpm.conf
-RUN docker-php-pecl-install uploadprogress-1.0.3.1
 
 
 # <composer>
@@ -27,4 +25,5 @@ RUN echo "phar.readonly = off" > /usr/local/etc/php/conf.d/phar.ini
 # </composer>
 
 
+RUN docker-php-pecl-install uploadprogress-1.0.3.1
 COPY etc/php.ini /usr/local/etc/php/php.ini
