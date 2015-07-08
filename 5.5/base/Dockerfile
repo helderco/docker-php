@@ -1,4 +1,4 @@
-FROM php:5.5-fpm
+FROM php:5.5.26-fpm
 MAINTAINER Helder Correia <me@heldercorreia.com>
 
 COPY bin/* /usr/local/bin/
