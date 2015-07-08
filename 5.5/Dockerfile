@@ -1,21 +1,17 @@
-FROM php:5.5-fpm
+FROM helder/php-5.5-base
+MAINTAINER Helder Correia <me@heldercorreia.com>
 
-# Install dependencies (git is needed for some packages in composer)
-RUN apt-get update \
-    && apt-get install -y git zlib1g-dev \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-install \
+      libfreetype6-dev \
+      libjpeg62-turbo-dev \
+      libmcrypt-dev \
+      libpng12-dev
 
-# Install needed extensions
-RUN docker-php-ext-install mysqli pdo_mysql zip
+RUN docker-php-ext-install \
+        mcrypt \
+        pdo_mysql \
+        mbstring \
+ && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+ && docker-php-ext-install gd
 
-# Tweak php-fpm.conf a bit
-RUN sed -i -e "s/^pm = dynamic/pm = ondemand/" /usr/local/etc/php-fpm.conf
-
-# Add own php.ini
-COPY php.ini /usr/local/lib/
-
-# Add composer globally
-RUN set -x \
-    && curl -sS https://getcomposer.org/installer | php \
-    && mv composer.phar /usr/local/bin/composer
+RUN docker-php-pecl-install uploadprogress-1.0.3.1

@@ -1,4 +1,4 @@
-FROM helder/php-5.6
+FROM helder/php-5.3-base
 MAINTAINER Helder Correia <me@heldercorreia.com>
 
 RUN cd /usr/local/etc/php && cp development.ini conf.d/environment.ini

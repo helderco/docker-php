@@ -27,7 +27,8 @@ fi
 
 for ext in "${exts[@]}"; do
   (
-    curl -sSL "http://pecl.php.net/get/$ext.tgz" | tar xvz "$ext"
+    mkdir -p $ext
+    curl -sSL "http://pecl.php.net/get/$ext" | tar xvz -C "$ext" --strip-components=1
     docker-php-ext-install $ext
   )
 done

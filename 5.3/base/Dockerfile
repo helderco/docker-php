@@ -1,4 +1,5 @@
 FROM debian:jessie
+MAINTAINER Helder Correia <me@heldercorreia.com>
 
 # Based on official repo when PHP 5.3 was dropped:
 # https://github.com/docker-library/php/commit/8814c6a7888ffa521de4d8d06454e29992b87dc7
@@ -73,9 +74,13 @@ RUN set -x \
     && apt-get purge -y --auto-remove autoconf2.13 \
     && rm -r /usr/src/php
 
+WORKDIR /var/www/html
 COPY php-fpm.conf /usr/local/etc/
-COPY php.ini "$PHP_INI_DIR"/
-RUN usermod -u 1000 www-data
 
 EXPOSE 9000
 CMD ["php-fpm"]
+
+
+COPY bin/* /usr/local/bin/
+COPY etc/*.ini /usr/local/etc/php/
+RUN cd /usr/local/etc/php && cp production.ini conf.d/environment.ini
