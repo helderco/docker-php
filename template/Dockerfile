@@ -2,7 +2,6 @@ FROM php:{{ version }}-fpm
 MAINTAINER Helder Correia <me@heldercorreia.com>
 
 # Add configs
-
 COPY bin/* /usr/local/bin/
 COPY etc/*.ini /usr/local/etc/php/
 RUN cd /usr/local/etc/php && cp production.ini conf.d/environment.ini
@@ -10,7 +9,6 @@ RUN sed -i -e "s/^pm = dynamic/pm = ondemand/" /usr/local/etc/php-fpm.conf
 
 
 # Include composer
-
 RUN apt-install git zlib1g-dev && \
     docker-php-ext-install zip
 
@@ -28,7 +26,6 @@ RUN echo "phar.readonly = off" > /usr/local/etc/php/conf.d/phar.ini
 
 
 # Install useful extensions
-
 RUN apt-install \
       libfreetype6-dev \
       libjpeg62-turbo-dev \
@@ -43,9 +40,3 @@ RUN apt-install \
   && docker-php-ext-install gd
 
 RUN docker-php-pecl-install uploadprogress-1.0.3.1
-
-
-# --- development ---
-
-RUN cd /usr/local/etc/php && cp development.ini conf.d/environment.ini
-RUN usermod -u 1000 www-data
