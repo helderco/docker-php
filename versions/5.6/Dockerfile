@@ -1,4 +1,4 @@
-FROM php:5.6
+FROM php:5.6-fpm
 MAINTAINER Helder Correia <me@heldercorreia.com>
 
 # Add configs

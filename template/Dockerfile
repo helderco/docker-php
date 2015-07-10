@@ -1,4 +1,4 @@
-FROM php:{{ version }}
+FROM php:{{ version }}-fpm
 MAINTAINER Helder Correia <me@heldercorreia.com>
 
 # Add configs

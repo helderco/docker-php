@@ -20,4 +20,4 @@ for version in "${versions[@]}"; do
 done
 
 echo "Fix PHP 5.3 docker hub repository"
-(set -x; sed -i '' -e "s|FROM php:5.3|FROM helder/php-5.3|" versions/5.3/Dockerfile)
+(set -x; sed -i '' -e "1s|.*|FROM helder/php-5.3|" versions/5.3/Dockerfile)
