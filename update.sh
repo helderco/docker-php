@@ -19,5 +19,13 @@ for version in "${versions[@]}"; do
     )
 done
 
-echo "Fix PHP 5.3 docker hub repository"
-(set -x; sed -i '' -e "1s|.*|FROM helder/php-5.3|" versions/5.3/Dockerfile)
+echo "Fix PHP 5.3"
+(
+  set -x;
+  sed -i '' \
+      -e '1s|.*|FROM helder/php-5.3|' \
+      -e '/--with-freetype-dir/i\
+        \  && mkdir /usr/include/freetype2/freetype \\ \
+        \  && ln -s /usr/include/freetype2/freetype.h /usr/include/freetype2/freetype/freetype.h \\' \
+    versions/5.3/Dockerfile
+)
