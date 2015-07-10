@@ -36,6 +36,7 @@ RUN apt-install \
       libpng12-dev \
   && docker-php-ext-install \
       mcrypt \
+      mysqli \
       pdo_mysql \
       mbstring \
   && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
