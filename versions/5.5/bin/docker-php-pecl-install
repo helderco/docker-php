@@ -14,7 +14,9 @@ fi
 pecl install "$@"
 
 while [ $# -gt 0 ]; do
-  ext=$(echo $1 | cut -d- -f1)
+  ext="$1"
+  ext=$(echo "$ext" | cut -d- -f1)
+  ext=$(echo "$ext" | cut -d\/ -f2)
   shift
 
   for module in $(find /usr/local/lib/php/extensions -name "$ext.so"); do
