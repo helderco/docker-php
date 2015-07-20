@@ -5,7 +5,11 @@ MAINTAINER Helder Correia <me@heldercorreia.com>
 COPY bin/* /usr/local/bin/
 COPY etc/*.ini /usr/local/etc/php/
 RUN cd /usr/local/etc/php && cp production.ini conf.d/environment.ini
-RUN sed -i -e "s/^pm = dynamic/pm = ondemand/" /usr/local/etc/php-fpm.conf
+RUN sed -i \
+        -e "s/^pm = dynamic/pm = ondemand/" \
+        -e "\$a\\" \
+        -e "catch_workers_output = yes\n" \
+      /usr/local/etc/php-fpm.conf
 
 
 # Include composer
