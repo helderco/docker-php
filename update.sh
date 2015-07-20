@@ -13,8 +13,8 @@ for version in "${versions[@]}"; do
     echo "Updating $version"
     (
       set -x
-      rsync -auh --delete template/ versions/$version
-      cp README.md versions/$version/
+      rm -rf versions/$version/*
+      cp -r README.md template/* versions/$version/
       sed -i '' -e 's/{{ version }}/'$version'/g' versions/$version/Dockerfile
     )
 done

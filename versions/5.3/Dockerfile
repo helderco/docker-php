@@ -1,15 +1,7 @@
 FROM helder/php-5.3
 MAINTAINER Helder Correia <me@heldercorreia.com>
 
-# Add configs
 COPY bin/* /usr/local/bin/
-COPY etc/*.ini /usr/local/etc/php/
-RUN cd /usr/local/etc/php && cp production.ini conf.d/environment.ini
-RUN sed -i \
-        -e "s/^pm = dynamic/pm = ondemand/" \
-        -e "\$a\\" \
-        -e "catch_workers_output = yes\n" \
-      /usr/local/etc/php-fpm.conf
 
 
 # Include composer
@@ -40,9 +32,20 @@ RUN apt-install \
       mysqli \
       pdo_mysql \
       mbstring \
-  && mkdir /usr/include/freetype2/freetype \
+  && mkdir /usr/include/freetype2/freetype \ 
   && ln -s /usr/include/freetype2/freetype.h /usr/include/freetype2/freetype/freetype.h \
   && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
   && docker-php-ext-install gd
 
 RUN docker-php-pecl-install uploadprogress-1.0.3.1
+
+
+# Add configs
+COPY etc/*.ini /usr/local/etc/php/
+RUN cd /usr/local/etc/php && cp production.ini conf.d/environment.ini
+RUN mkdir -p /usr/local/etc/fpm.d && \
+    sed -i \
+        -e "s/^pm = dynamic/pm = ondemand/" \
+        -e "\$a\\" \
+        -e "\ncatch_workers_output = yes\ninclude=/usr/local/etc/fpm.d/*.conf" \
+      /usr/local/etc/php-fpm.conf
