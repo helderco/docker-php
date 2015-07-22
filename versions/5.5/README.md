@@ -32,11 +32,11 @@ See the Dockerfile for examples on how to use these.
 
 ### Configuration
 
-#### `/usr/local/etc/php/php.ini`
+#### /usr/local/etc/php/php.ini
 
 Added some common options. Notice I've set `date.timezone = Atlantic/Azores`, so you may want to change that.
 
-#### `/usr/local/etc/php/conf.d/environment.ini`
+#### /usr/local/etc/php/conf.d/environment.ini
 
 Copy of `production.ini`:
 
@@ -49,8 +49,8 @@ To use development settings, in your Dockerfile:
 
 Or use your own.
 
-#### `/usr/local/etc/php-fpm.conf`
+#### /usr/local/etc/php-fpm.conf
 
 * Changed process manager to `ondemand`;
+* Added `include=/usr/local/etc/fpm.d/*.conf`, so you can add files with FPM configs;
 * Added `catch_workers_output = yes` (otherwise couldn't get errors to show up);
-* Added `include=/usr/local/etc/fpm.d/*.conf`, so you and add files with FPM configs;

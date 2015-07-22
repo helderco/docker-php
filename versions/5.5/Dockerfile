@@ -42,8 +42,6 @@ RUN docker-php-pecl-install uploadprogress-1.0.3.1
 COPY etc/*.ini /usr/local/etc/php/
 RUN cd /usr/local/etc/php && cp production.ini conf.d/environment.ini
 RUN mkdir -p /usr/local/etc/fpm.d && \
-    sed -i \
-        -e "s/^pm = dynamic/pm = ondemand/" \
-        -e "\$a\\" \
-        -e "\ncatch_workers_output = yes\ninclude=/usr/local/etc/fpm.d/*.conf" \
-      /usr/local/etc/php-fpm.conf
+    echo "catch_workers_output = yes" > /usr/local/etc/fpm.d/logging.conf && \
+    echo "\ninclude=/usr/local/etc/fpm.d/*.conf" >> /usr/local/etc/php-fpm.conf && \
+    sed -i -e "s/^pm = dynamic/pm = ondemand/" /usr/local/etc/php-fpm.conf
