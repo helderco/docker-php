@@ -28,4 +28,11 @@ echo "Fix PHP 5.3"
         \  && mkdir /usr/include/freetype2/freetype \\ \
         \  && ln -s /usr/include/freetype2/freetype.h /usr/include/freetype2/freetype/freetype.h \\' \
     versions/5.3/Dockerfile
+  sed -i '' \
+      -e '/^exec/i\
+        \# PHP 5.3 does not have "clear_env = no", so we need to copy the environment to php-fpm.conf \
+        \# (see https://github.com/docker-library/php/issues/74). \
+        \env | sed "s/\\(.*\\)=\\(.*\\)/env[\\1]='"'"'\\2'"'"'/" > /usr/local/etc/fpm.d/env.conf \
+        \' \
+    versions/5.3/entrypoint.sh
 )

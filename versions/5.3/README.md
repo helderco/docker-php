@@ -54,3 +54,13 @@ Or use your own.
 * Changed process manager to `ondemand`;
 * Added `include=/usr/local/etc/fpm.d/*.conf`, so you can add files with FPM configs;
 * Added `catch_workers_output = yes` (otherwise couldn't get errors to show up);
+
+### Syslog
+
+The image comes with an entrypoint that checks for a socket in `/var/run/rsyslog/dev/log`. If it exists, it will symlink `/dev/log` to it. This is useful to send logs to syslog.
+
+    docker run -d --name syslog helder/rsyslog
+    docker run -it --rm --volumes-from syslog helder/php logger -p local1.notice "This is a notice!"
+    docker logs syslog
+
+If you would like to check for another location, set the environment variable `DEV_LOG_TARGET`.
