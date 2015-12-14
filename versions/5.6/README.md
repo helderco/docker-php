@@ -9,6 +9,7 @@ This image adds common things that I usually need to the official [php (fpm)](ht
 
 * **PHP**
     * gd
+    * intl
     * mbstring
     * mcrypt
     * mysqli
@@ -16,11 +17,11 @@ This image adds common things that I usually need to the official [php (fpm)](ht
     * zip
 
 * **PECL**
-    * uploadprogress (1.0.3.1)
+    * uploadprogress
 
 ### Tooling
 
-* Composer (1.0.0-alpha10)
+* Composer (1.0.0-alpha11)
 
 ### Scripts
 
