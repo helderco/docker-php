@@ -54,7 +54,6 @@ Or use your own.
 
 * Changed process manager to `ondemand`;
 * Added `include=/usr/local/etc/fpm.d/*.conf`, so you can add files with FPM configs;
-* Added `catch_workers_output = yes` (otherwise couldn't get errors to show up);
 
 ### Syslog
 
