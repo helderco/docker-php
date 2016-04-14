@@ -26,12 +26,25 @@ RUN apt-install zlib1g-dev libicu-dev g++ && \
     apt-purge g++
 
 
+# grab gosu for easy step-down from root
+ENV GOSU_VERSION 1.7
+RUN set -x \
+  && curl -sSLo /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture)" \
+  && curl -sSLo /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture).asc" \
+  && export GNUPGHOME="$(mktemp -d)" \
+  && gpg --keyserver ha.pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 \
+  && gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
+  && rm -r "$GNUPGHOME" /usr/local/bin/gosu.asc \
+  && chmod +x /usr/local/bin/gosu \
+  && gosu nobody true
+
+
 # Include composer
 RUN apt-install git zlib1g-dev && \
     docker-php-ext-install zip
 
-ENV COMPOSER_HOME /root/composer
-ENV COMPOSER_VERSION 1.0.0-alpha11
+ENV COMPOSER_HOME /var/www/.composer
+ENV COMPOSER_VERSION 1.0.0
 ENV PATH vendor/bin:$COMPOSER_HOME/vendor/bin:$PATH
 
 RUN curl -sS https://getcomposer.org/installer | php -- \
@@ -39,8 +52,10 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
       --filename=composer \
       --version=${COMPOSER_VERSION}
 
-VOLUME /root/composer/cache
-RUN echo "phar.readonly = off" > /usr/local/etc/php/conf.d/phar.ini
+RUN mkdir -p $COMPOSER_HOME/cache && \
+    chown -R www-data:www-data /var/www && \
+    echo "phar.readonly = off" > /usr/local/etc/php/conf.d/phar.ini
+VOLUME $COMPOSER_HOME/cache
 
 
 # Add configs

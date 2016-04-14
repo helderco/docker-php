@@ -21,7 +21,8 @@ This image adds common things that I usually need to the official [php (fpm)](ht
 
 ### Tooling
 
-* Composer (1.0.0-alpha11)
+* gosu
+* Composer (1.0.0)
 
 ### Scripts
 
@@ -59,8 +60,34 @@ Or use your own.
 
 The image comes with an entrypoint that checks for a socket in `/var/run/rsyslog/dev/log`. If it exists, it will symlink `/dev/log` to it. This is useful to send logs to syslog.
 
-    docker run -d --name syslog helder/rsyslog
-    docker run -it --rm --volumes-from syslog helder/php logger -p local1.notice "This is a notice!"
-    docker logs syslog
+    $ docker run -d --name syslog helder/rsyslog
+    $ docker run -it --rm --volumes-from syslog helder/php logger -p local1.notice "This is a notice!"
+    $ docker logs syslog
 
 If you would like to check for another location, set the environment variable `DEV_LOG_TARGET`.
+
+### UID and GID mapping
+
+When mounting a volume from the host to a container, the container sees the host's owner for the files, even if it doesn't exist in the container. This image has a feature that allows setting an environment variable (`MAP_WWW_UID`) to use a directory and get www-data to have the same uid and gid as the owner of that directory.
+
+This is useful for example if you're using some tooling in the container to generate files inside the host volume. If this is not used, the host will have files with `uid=33 gid=33` or `uid=0 gid=0`, depending if you're using the www-data user or root.
+
+Note that the container must be run as root, for the permission to change the www-data uid and gid.
+Use `gosu` to run a command as www-data in order to use the mapped ownership.
+
+    $ # default behavior
+    $ docker run -it --rm helder/php gosu www-data id
+    uid=33(www-data) gid=33(www-data) groups=33(www-data)
+
+    $ # use a host volume to change www-data's uid
+    $ docker run -it --rm -e MAP_WWW_UID=/usr/src/app -v $PWD:/usr/src/app helder/php gosu www-data id
+    uid=501(www-data) gid=33(www-data) groups=33(www-data),20(dialout)
+
+Notice that in a Mac, since the default group is `20(staff)`, it matches an already existing group in the container (`20(dialout)`). In that case, we can't change www-data's gid, so it gets added as a secondary group.
+
+In GNU/Linux you should have something like:
+
+    $ docker run -it --rm -e MAP_WWW_UID=/usr/src/app -v $PWD:/usr/src/app helder/php gosu www-data id
+    uid=1000(www-data) gid=1000(www-data) groups=1000(www-data)
+
+Now, if you create a file with www-data in the container to the host volume, the host should have the correct owner set.
