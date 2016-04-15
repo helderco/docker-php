@@ -15,6 +15,7 @@ This image adds common things that I usually need to the official [php (fpm)](ht
     * mysqli
     * pdo_mysql
     * zip
+    * xdebug (disabled by default)
 
 * **PECL**
     * uploadprogress
@@ -56,17 +57,12 @@ Or use your own.
 * Changed process manager to `ondemand`;
 * Added `include=/usr/local/etc/fpm.d/*.conf`, so you can add files with FPM configs;
 
-### Syslog
 
-The image comes with an entrypoint that checks for a socket in `/var/run/rsyslog/dev/log`. If it exists, it will symlink `/dev/log` to it. This is useful to send logs to syslog.
+### Entrypoint features
 
-    $ docker run -d --name syslog helder/rsyslog
-    $ docker run -it --rm --volumes-from syslog helder/php logger -p local1.notice "This is a notice!"
-    $ docker logs syslog
+The entrypoint runs scripts in `/docker-entrypoint-init.d/*.sh`. Add your own init scripts there or remove existing ones.
 
-If you would like to check for another location, set the environment variable `DEV_LOG_TARGET`.
-
-### UID and GID mapping
+#### UID and GID mapping
 
 When mounting a volume from the host to a container, the container sees the host's owner for the files, even if it doesn't exist in the container. This image has a feature that allows setting an environment variable (`MAP_WWW_UID`) to use a directory and get www-data to have the same uid and gid as the owner of that directory.
 
@@ -91,3 +87,17 @@ In GNU/Linux you should have something like:
     uid=1000(www-data) gid=1000(www-data) groups=1000(www-data)
 
 Now, if you create a file with www-data in the container to the host volume, the host should have the correct owner set.
+
+#### Syslog
+
+The image comes with an entrypoint that checks for a socket in `/var/run/rsyslog/dev/log`. If it exists, it will symlink `/dev/log` to it. This is useful to send logs to syslog.
+
+    $ docker run -d --name syslog helder/rsyslog
+    $ docker run -it --rm --volumes-from syslog helder/php logger -p local1.notice "This is a notice!"
+    $ docker logs syslog
+
+If you would like to check for another location, set the environment variable `DEV_LOG_TARGET`.
+
+#### XDebug
+
+The XDebug extension is installed but disabled by default. To enable, set the enviroment variable `USE_XDEBUG=true`.

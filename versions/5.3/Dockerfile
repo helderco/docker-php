@@ -2,7 +2,7 @@ FROM helder/php-5.3
 MAINTAINER Helder Correia <me@heldercorreia.com>
 
 COPY bin/* /usr/local/bin/
-
+RUN mkdir -p /usr/local/etc/php/disabled
 
 # Install useful extensions
 RUN apt-install \
@@ -26,6 +26,13 @@ RUN apt-install zlib1g-dev libicu-dev g++ && \
     docker-php-ext-configure intl && \
     docker-php-ext-install intl && \
     apt-purge g++
+
+ENV USE_XDEBUG no
+ENV XDEBUG_VERSION 2.2.7
+RUN docker-php-pecl-install xdebug-$XDEBUG_VERSION && \
+    echo "zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20090626/xdebug.so" > /usr/local/etc/php/conf.d/docker-php-pecl-xdebug.ini && \ 
+    echo "xdebug.remote_enable=on\nxdebug.remote_connect_back=on" > /usr/local/etc/php/conf.d/xdebug.ini && \
+    mv /usr/local/etc/php/conf.d/*xdebug.ini /usr/local/etc/php/disabled/
 
 
 # grab gosu for easy step-down from root
@@ -69,6 +76,7 @@ RUN mkdir -p /usr/local/etc/fpm.d && \
 
 
 # Add entrypoint
-COPY entrypoint.sh /
-ENTRYPOINT ["/entrypoint.sh"]
+COPY init.d /docker-entrypoint-init.d/
+COPY docker-entrypoint.sh /
+ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["php-fpm"]

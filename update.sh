@@ -27,12 +27,9 @@ echo "Fix PHP 5.3"
       -e '/--with-freetype-dir/i\
         \  && mkdir /usr/include/freetype2/freetype \\ \
         \  && ln -s /usr/include/freetype2/freetype.h /usr/include/freetype2/freetype/freetype.h \\' \
+      -e '/pecl-install xdebug/ a\
+        \ \ \ \ echo "zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20090626/xdebug.so" > /usr/local/etc/php/conf.d/docker-php-pecl-xdebug.ini && \\ \' \
+      -e 's/\(ENV XDEBUG_VERSION\) .*/\1 2.2.7/g' \
     versions/5.3/Dockerfile
-  sed -i '' \
-      -e '/^exec/i\
-        \# PHP 5.3 does not have "clear_env = no", so we need to copy the environment to php-fpm.conf \
-        \# (see https://github.com/docker-library/php/issues/74). \
-        \env | sed "s/\\(.*\\)=\\(.*\\)/env[\\1]='"'"'\\2'"'"'/" > /usr/local/etc/fpm.d/env.conf \
-        \' \
-    versions/5.3/entrypoint.sh
+  cp fpm-env.sh versions/5.3/docker-entrypoint-init.d/
 )
