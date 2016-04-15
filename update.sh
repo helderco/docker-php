@@ -31,5 +31,5 @@ echo "Fix PHP 5.3"
         \ \ \ \ echo "zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20090626/xdebug.so" > /usr/local/etc/php/conf.d/docker-php-pecl-xdebug.ini && \\ \' \
       -e 's/\(ENV XDEBUG_VERSION\) .*/\1 2.2.7/g' \
     versions/5.3/Dockerfile
-  cp fpm-env.sh versions/5.3/docker-entrypoint-init.d/
+  cp fpm-env.sh versions/5.3/init.d/
 )

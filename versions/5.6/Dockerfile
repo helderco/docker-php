@@ -32,7 +32,16 @@ RUN docker-php-pecl-install xdebug-$XDEBUG_VERSION && \
     mv /usr/local/etc/php/conf.d/*xdebug.ini /usr/local/etc/php/disabled/
 
 
-# grab gosu for easy step-down from root
+# Use SSMTP
+RUN apt-install ssmtp && \
+    groupadd ssmtp && \
+    chown :ssmtp /usr/sbin/ssmtp && \
+    chmod g+s /usr/sbin/ssmtp && \
+    echo "sendmail_path = /usr/sbin/ssmtp -t" > /usr/local/etc/php/conf.d/sendmail.ini && \
+    mv /etc/ssmtp/ssmtp.conf /etc/ssmtp/ssmtp.conf~
+
+
+# Grab gosu for easy step-down from root
 ENV GOSU_VERSION 1.7
 RUN set -x \
   && curl -sSLo /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture)" \
@@ -66,9 +75,10 @@ VOLUME $COMPOSER_HOME/cache
 
 # Add configs
 COPY etc/*.ini /usr/local/etc/php/
-RUN cd /usr/local/etc/php && cp production.ini conf.d/environment.ini
+RUN cd /usr/local/etc/php && cp prod.ini conf.d/environment.ini
 RUN mkdir -p /usr/local/etc/fpm.d && \
     echo "\ninclude=/usr/local/etc/fpm.d/*.conf" >> /usr/local/etc/php-fpm.conf && \
+    sed -i -e '/^access.log/ s/^/;/' /usr/local/etc/php-fpm.conf && \
     sed -i -e "s/^pm = dynamic/pm = ondemand/" /usr/local/etc/php-fpm.conf
 
 
