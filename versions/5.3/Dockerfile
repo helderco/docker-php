@@ -37,7 +37,7 @@ RUN docker-php-pecl-install xdebug-$XDEBUG_VERSION && \
 
 # Use SSMTP
 RUN apt-install ssmtp && \
-    groupadd ssmtp && \
+    groupadd -g 500 ssmtp && \
     chown :ssmtp /usr/sbin/ssmtp && \
     chmod g+s /usr/sbin/ssmtp && \
     echo "sendmail_path = /usr/sbin/ssmtp -t" > /usr/local/etc/php/conf.d/sendmail.ini && \
@@ -81,6 +81,7 @@ COPY etc/*.ini /usr/local/etc/php/
 RUN cd /usr/local/etc/php && cp prod.ini conf.d/environment.ini
 RUN mkdir -p /usr/local/etc/fpm.d && \
     echo "\ninclude=/usr/local/etc/fpm.d/*.conf" >> /usr/local/etc/php-fpm.conf && \
+    touch /usr/local/etc/fpm.d/placeholder.conf && \
     sed -i -e '/^access.log/ s/^/;/' /usr/local/etc/php-fpm.conf && \
     sed -i -e "s/^pm = dynamic/pm = ondemand/" /usr/local/etc/php-fpm.conf
 
