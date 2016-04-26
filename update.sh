@@ -27,8 +27,6 @@ echo "Fix PHP 5.3"
       -e '/--with-freetype-dir/i\
         \  && mkdir /usr/include/freetype2/freetype \\ \
         \  && ln -s /usr/include/freetype2/freetype.h /usr/include/freetype2/freetype/freetype.h \\' \
-      -e '/pecl-install xdebug/ a\
-        \ \ \ \ echo "zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20090626/xdebug.so" > /usr/local/etc/php/conf.d/docker-php-pecl-xdebug.ini && \\ \' \
       -e 's/\(ENV XDEBUG_VERSION\) .*/\1 2.2.7/g' \
     versions/5.3/Dockerfile
   cp fpm-env.sh versions/5.3/init.d/

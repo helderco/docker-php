@@ -49,10 +49,10 @@ Copy of `prod.ini`:
 
 To use development settings, set `ENVIRONMENT=dev`.
 
-#### /usr/local/etc/php-fpm.conf
+#### /usr/local/etc/php-fpm.d/*.conf
 
 * Changed process manager to `ondemand`;
-* Added `include=/usr/local/etc/fpm.d/*.conf`, so you can add files with FPM configs;
+* Silenced access logs;
 
 
 ### Entrypoint features
