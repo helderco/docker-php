@@ -1,7 +1,9 @@
 #!/bin/bash
 set -e
 
-# Allow enabling XDebug
+# Enable/disable xdebug
 if [ "$USE_XDEBUG" = "yes" ]; then
-    mv /usr/local/etc/php/disabled/*xdebug.ini /usr/local/etc/php/conf.d/
+    cp -n /usr/local/etc/php/xdebug.d/* /usr/local/etc/php/conf.d/
+else
+    find /usr/local/etc/php/conf.d -name '*xdebug*' -delete
 fi

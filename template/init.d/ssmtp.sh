@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 
 SMTP_CONF=/etc/ssmtp/ssmtp.conf
 

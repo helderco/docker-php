@@ -31,7 +31,8 @@ ENV USE_XDEBUG no
 ENV XDEBUG_VERSION 2.2.7
 RUN docker-php-pecl-install xdebug-$XDEBUG_VERSION && \
     echo "xdebug.remote_enable=on\nxdebug.remote_connect_back=on" > /usr/local/etc/php/conf.d/xdebug.ini && \
-    mv /usr/local/etc/php/conf.d/*xdebug.ini /usr/local/etc/php/disabled/
+    mkdir -p /usr/local/etc/php/xdebug.d && \
+    mv /usr/local/etc/php/conf.d/*xdebug.ini /usr/local/etc/php/xdebug.d/
 
 
 # Use SSMTP

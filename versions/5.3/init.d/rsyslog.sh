@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 
 : ${DEV_LOG_TARGET:=/var/run/rsyslog/dev/log}
 
