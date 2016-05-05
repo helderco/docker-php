@@ -25,6 +25,8 @@ This image adds common things that I usually need to the official [php (fpm)](ht
 * gosu
 * ssmtp
 * composer
+* git
+* rsync
 
 ### Scripts
 

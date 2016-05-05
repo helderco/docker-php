@@ -58,7 +58,7 @@ RUN set -x \
 
 
 # Include composer
-RUN apt-install git zlib1g-dev && \
+RUN apt-install git rsync zlib1g-dev && \
     docker-php-ext-install zip
 
 ENV COMPOSER_HOME /var/www/.composer
