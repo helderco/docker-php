@@ -1,5 +1,5 @@
 FROM php:5.5-fpm
-LABEL maintainer "helder"
+LABEL maintainer="helder"
 
 COPY bin/* /usr/local/bin/
 RUN mkdir -p /usr/local/etc/php/disabled
@@ -26,7 +26,7 @@ RUN apt-install zlib1g-dev libicu-dev g++ && \
     apt-purge g++
 
 ENV USE_XDEBUG no
-ENV XDEBUG_VERSION 2.4.0
+ENV XDEBUG_VERSION 2.5.0
 RUN docker-php-pecl-install xdebug-$XDEBUG_VERSION && \
     echo "xdebug.remote_enable=on\nxdebug.remote_connect_back=on" > /usr/local/etc/php/conf.d/xdebug.ini && \
     mkdir -p /usr/local/etc/php/xdebug.d && \
@@ -60,7 +60,7 @@ RUN apt-install git rsync zlib1g-dev && \
     docker-php-ext-install zip
 
 ENV COMPOSER_HOME /var/www/.composer
-ENV COMPOSER_VERSION 1.0.0
+ENV COMPOSER_VERSION 1.3.1
 ENV PATH vendor/bin:$COMPOSER_HOME/vendor/bin:$PATH
 
 RUN curl -sS https://getcomposer.org/installer | php -- \

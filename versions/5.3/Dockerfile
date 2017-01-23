@@ -1,5 +1,5 @@
 FROM helder/php-5.3
-LABEL maintainer "helder"
+LABEL maintainer="helder"
 
 COPY bin/* /usr/local/bin/
 RUN mkdir -p /usr/local/etc/php/disabled
@@ -62,7 +62,7 @@ RUN apt-install git rsync zlib1g-dev && \
     docker-php-ext-install zip
 
 ENV COMPOSER_HOME /var/www/.composer
-ENV COMPOSER_VERSION 1.0.0
+ENV COMPOSER_VERSION 1.3.1
 ENV PATH vendor/bin:$COMPOSER_HOME/vendor/bin:$PATH
 
 RUN curl -sS https://getcomposer.org/installer | php -- \
