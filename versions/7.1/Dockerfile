@@ -1,4 +1,4 @@
-FROM php:{{ version }}-fpm
+FROM php:7.1-fpm
 LABEL maintainer "helder"
 
 COPY bin/* /usr/local/bin/

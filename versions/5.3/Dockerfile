@@ -1,5 +1,5 @@
 FROM helder/php-5.3
-MAINTAINER Helder Correia <me@heldercorreia.com>
+LABEL maintainer "helder"
 
 COPY bin/* /usr/local/bin/
 RUN mkdir -p /usr/local/etc/php/disabled
