@@ -86,6 +86,21 @@ Use `gosu` to run a command as www-data in order to use the mapped ownership.
     $ docker run -it --rm -e MAP_WWW_UID=no -v $PWD:/data -w /data helder/php gosu www-data id
     uid=33(www-data) gid=33(www-data) groups=33(www-data)
 
+
+#### Listen
+
+You can change the default listen value by using variables `LISTEN_ADDRESS` and `LISTEN_MODE`. The latter is used only when using a socket, and defaults to the value 0666.
+
+    $ docker run -it --rm helder/php grep listen /usr/local/etc/php-fpm.d/zz-docker.conf
+    listen = [::]:9000
+
+    $ docker run -it --rm -e 'LISTEN_ADDRESS=[::]:3000' helder/php grep listen /usr/local/etc/php-fpm.d/zz-docker.conf
+    listen = [::]:3000
+
+    $ docker run -it --rm -e LISTEN_ADDRESS=/var/run/project.sock helder/php grep listen /usr/local/etc/php-fpm.d/zz-docker.conf
+    listen = /var/run/project.sock
+    listen.mode = 0666
+
 #### Syslog
 
 The image comes with an entrypoint that checks for a socket in `/var/run/rsyslog/dev/log`. If it exists, it will symlink `/dev/log` to it. This is useful to send logs to syslog.
