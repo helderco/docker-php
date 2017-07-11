@@ -17,6 +17,9 @@ for version in "${versions[@]}"; do
       cp -r README.md template/* versions/$version/
       sed -i '' -e 's/{{ version }}/'$version'/g' versions/$version/Dockerfile
     )
+    if [[ $version == 7.* ]]; then
+      sed -i '' -e '/uploadprogress/ s/^#*/#/' versions/$version/Dockerfile
+    fi
 done
 
 echo "Fix PHP 5.3"
