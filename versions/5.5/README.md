@@ -111,21 +111,21 @@ The image comes with an entrypoint that checks for a socket in `/var/run/rsyslog
 
 If you would like to check for another location, set the environment variable `DEV_LOG_TARGET`.
 
-#### SSMTP and Mailcatcher
+#### SSMTP and Mailhog
 
 This is a neat feature. By default, this image will send any email to an SMTP host `mail` and
-port 25. So if you use `helder/mailcatcher` and link a container with this image to that, you'll
-catch all the emails sent by your application in mailcatcher.
+port 1025. So if you use `mailhog/mailhog` and link a container with this image to that, you'll
+catch all the emails sent by your application in mailhog.
 
-Run mailcatcher process:
+Run mailhog process:
 
-    docker run -d -p 1080:80 --name mail helder/mailcatcher
+    docker run -d -p 8025:8025 --name mail mailhog/mailhog
 
 Send email:
 
     docker run -it --rm --link mail helder/php php -r 'mail("to@address.com", "Test", "Testing!", "From: my@example.com");'
 
-Open your browser at http://localhost:1080 to see your emails.
+Open your browser at http://localhost:8025 to see your emails.
 
 To use other settings, override in your Dockerfile:
 
