@@ -10,6 +10,7 @@ RUN apt-install \
       libjpeg62-turbo-dev \
       libmcrypt-dev \
       libpng12-dev \
+      imagemagick \
   && docker-php-ext-install \
       mcrypt \
       mysqli \
