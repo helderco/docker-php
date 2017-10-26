@@ -28,6 +28,7 @@ This image adds common things that I usually need to the official [php (fpm)](ht
 * git
 * rsync
 * imagemagick
+* ghostscript
 
 ### Scripts
 

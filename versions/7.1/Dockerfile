@@ -11,6 +11,7 @@ RUN apt-install \
       libmcrypt-dev \
       libpng12-dev \
       imagemagick \
+      ghostscript \
   && docker-php-ext-install \
       mcrypt \
       mysqli \
