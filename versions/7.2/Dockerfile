@@ -1,4 +1,4 @@
-FROM helder/php-5.3
+FROM php:7.2-fpm
 LABEL maintainer="helder"
 
 COPY bin/* /usr/local/bin/
@@ -8,21 +8,17 @@ RUN mkdir -p /usr/local/etc/php/disabled
 RUN apt-install \
       libfreetype6-dev \
       libjpeg62-turbo-dev \
-      libmcrypt-dev \
-      libpng12-dev \
+      libpng-dev \
       imagemagick \
       ghostscript \
   && docker-php-ext-install \
-      mcrypt \
       mysqli \
       pdo_mysql \
       mbstring \
-  && mkdir /usr/include/freetype2/freetype \ 
-  && ln -s /usr/include/freetype2/freetype.h /usr/include/freetype2/freetype/freetype.h \
   && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
   && docker-php-ext-install gd
 
-RUN docker-php-pecl-install uploadprogress
+#RUN docker-php-pecl-install uploadprogress
 
 RUN apt-install zlib1g-dev libicu-dev g++ && \
     docker-php-ext-configure intl && \
@@ -30,7 +26,7 @@ RUN apt-install zlib1g-dev libicu-dev g++ && \
     apt-purge g++
 
 ENV USE_XDEBUG no
-ENV XDEBUG_VERSION 2.2.7
+ENV XDEBUG_VERSION 2.6.0
 RUN docker-php-pecl-install xdebug-$XDEBUG_VERSION && \
     echo "xdebug.remote_enable=on\nxdebug.remote_connect_back=on" > /usr/local/etc/php/conf.d/xdebug.ini && \
     mkdir -p /usr/local/etc/php/xdebug.d && \

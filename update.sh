@@ -19,6 +19,7 @@ for version in "${versions[@]}"; do
     )
     if [[ $version == 7.* ]]; then
       sed -i '' -e '/uploadprogress/ s/^#*/#/' versions/$version/Dockerfile
+      sed -i '' -e 's/\(ENV XDEBUG_VERSION\) .*/\1 2.6.0/g' versions/$version/Dockerfile
     fi
 done
 
@@ -33,4 +34,13 @@ echo "Fix PHP 5.3"
       -e 's/\(ENV XDEBUG_VERSION\) .*/\1 2.2.7/g' \
     versions/5.3/Dockerfile
   cp fpm-env.sh versions/5.3/init.d/
+)
+
+echo "Fix PHP 7.2"
+(
+  set -x;
+  sed -i '' \
+      -e 's/libpng12-dev/libpng-dev/g' \
+      -e '/mcrypt/ d' \
+      versions/7.2/Dockerfile
 )
