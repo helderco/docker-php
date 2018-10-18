@@ -8,12 +8,10 @@ RUN mkdir -p /usr/local/etc/php/disabled
 RUN apt-install \
       libfreetype6-dev \
       libjpeg62-turbo-dev \
-      libmcrypt-dev \
-      libpng12-dev \
+      libpng-dev \
       imagemagick \
       ghostscript \
   && docker-php-ext-install \
-      mcrypt \
       mysqli \
       pdo_mysql \
       mbstring \
