@@ -19,7 +19,7 @@ for version in "${versions[@]}"; do
     )
     if [[ $version == 7.* ]]; then
       sed -i '' -e '/uploadprogress/ s/^#*/#/' versions/$version/Dockerfile
-      sed -i '' -e 's/\(ENV XDEBUG_VERSION\) .*/\1 2.6.0/g' versions/$version/Dockerfile
+      sed -i '' -e 's/\(ENV XDEBUG_VERSION\) .*/\1 2.6.1/g' versions/$version/Dockerfile
     fi
 done
 
