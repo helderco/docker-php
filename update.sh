@@ -19,9 +19,9 @@ for version in "${versions[@]}"; do
     )
     if [[ $version == 7.* ]]; then
       sed -i '' -e '/uploadprogress/ s/^#*/#/' versions/$version/Dockerfile
-      sed -i '' -e 's/\(ENV XDEBUG_VERSION\) .*/\1 2.6.1/g' versions/$version/Dockerfile
+      sed -i '' -e 's/\(ENV XDEBUG_VERSION\) .*/\1 2.9.1/g' versions/$version/Dockerfile
       sed -i '' -e 's/libpng12-dev/libpng-dev/g' -e '/mcrypt/ d'  versions/$version/Dockerfile
-      sed -i '' -e '/; track_errors/ { N;N;N;N;N;d; }' versions/$version/etc/{dev,prod}.ini
+      sed -i '' -e '/; track_errors/ { N;N;N;N;N;d; }' versions/$version/etc/php/{dev,prod}.ini
     fi
 done
 

@@ -35,13 +35,12 @@ RUN docker-php-pecl-install xdebug-$XDEBUG_VERSION && \
     mv /usr/local/etc/php/conf.d/*xdebug.ini /usr/local/etc/php/xdebug.d/
 
 
-# Use SSMTP
-RUN apt-install ssmtp && \
-    groupadd -g 500 ssmtp && \
-    chown :ssmtp /usr/sbin/ssmtp && \
-    chmod g+s /usr/sbin/ssmtp && \
-    echo "sendmail_path = /usr/sbin/ssmtp -t" > /usr/local/etc/php/conf.d/sendmail.ini && \
-    mv /etc/ssmtp/ssmtp.conf /etc/ssmtp/ssmtp.conf~
+# Use MSMTP
+RUN apt-install msmtp && \
+    echo "sendmail_path = /usr/bin/msmtp -t --read-envelope-from" > /usr/local/etc/php/conf.d/sendmail.ini
+COPY etc/msmtprc /etc/msmtprc
+RUN chown :msmtp /etc/msmtprc && \
+    chmod 640 /etc/msmtprc
 
 
 # Grab gosu for easy step-down from root
@@ -53,10 +52,10 @@ RUN set -x \
 
 
 # Include composer
-RUN apt-install git rsync unzip zlib1g-dev && \
+RUN apt-install git rsync unzip zlib1g-dev libzip-dev && \
     docker-php-ext-install zip
 
-ENV COMPOSER_VERSION 1.7.2
+ENV COMPOSER_VERSION 1.9.3
 ENV COMPOSER_HOME /var/www/.composer
 ENV PATH vendor/bin:$COMPOSER_HOME/vendor/bin:$PATH
 
@@ -72,7 +71,7 @@ VOLUME $COMPOSER_HOME/cache
 
 
 # Add configs
-COPY etc/*.ini /usr/local/etc/php/
+COPY etc/php/* /usr/local/etc/php/
 RUN cd /usr/local/etc/php && cp prod.ini conf.d/environment.ini
 RUN sed -i -e '/^access.log/ s/^/;/' /usr/local/etc/php-fpm.d/docker.conf && \
     sed -i -e '/^listen =/ s/^/;/' /usr/local/etc/php-fpm.d/www.conf && \
