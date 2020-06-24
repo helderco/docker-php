@@ -1,4 +1,4 @@
-FROM php:7.1-fpm
+FROM php:7.4-fpm
 LABEL maintainer="helder"
 
 COPY bin/* /usr/local/bin/
@@ -16,7 +16,7 @@ RUN apt-install \
       mysqli \
       pdo_mysql \
       mbstring \
-  && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+  && docker-php-ext-configure gd --with-freetype --with-jpeg \
   && docker-php-ext-install gd
 
 RUN apt-install zlib1g-dev libicu-dev g++ && \

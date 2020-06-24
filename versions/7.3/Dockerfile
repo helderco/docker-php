@@ -6,6 +6,7 @@ RUN mkdir -p /usr/local/etc/php/disabled
 
 # Install useful extensions
 RUN apt-install \
+      libonig-dev \
       libfreetype6-dev \
       libjpeg62-turbo-dev \
       libpng-dev \
