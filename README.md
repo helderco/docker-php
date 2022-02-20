@@ -1,4 +1,4 @@
-# Docker image running PHP-FPM
+# Docker image running PHP-FPM (DEPRECATED)
 
 This image adds common things that I usually need to the official [php (fpm)](https://registry.hub.docker.com/_/php/) image. See that repo for basic usage.
 
